@@ -1,9 +1,10 @@
 \begin{table}
     \centering
-    \caption{Utterance Encoder}
-    \begin{tabular}{|l|r|r|}
+    \caption{Parameters of Utterance Encoder}
+    \label{tab:ParametersOfUtteranceEncoder}
+    \begin{tabular}{|l|c|c|}
         \hline
-        & {\#Embedding} & {\#Hidden Units} \\
+        Dataset & {\#Embedding} & {\#Hidden Units} \\
         \hline
         LSDSCC & 400 & 1000 \\
         \hline
@@ -12,30 +13,30 @@
         Ubuntu & 300 & 500 \\
         \hline
     \end{tabular}
-\end{table}%
+\end{table}
 
 \begin{table}
     \centering
-    \caption{Context Encoder}
-    \begin{tabular}{|r|r|}
+    \caption{Parameters of Context Encoder}
+    \label{tab:ParametersOfContextEncoder}
+    \begin{tabular}{|l|c|c|}
         \hline
-        RNN Direction & \#Hidden Units \\
+        Dataset & RNN Direction & \#Hidden Units \\
         \hline
-        bidirectional & 1000 \\
+        LSDSCC & Bidirectional & 1000 \\
         \hline
-        bidirectional & 1000 \\
+        OpenSubtitles & Bidirectional & 1000 \\
         \hline
-        unidirectional & 1000 \\
+        Ubuntu & Unidirectional & 1000 \\
         \hline
     \end{tabular}
 \end{table}
 
 \begin{table}
     \centering
-    \caption{Utterance Decoder}
-    \begin{tabular}{|l|*{3}{r|}}
-        \hline
-        & \multicolumn{3}{c|}{RNN Type} \\
+    \caption{RNN Type of Utterance Decoder}
+    \label{tab:RNNTypeOfUtteranceDecoder}
+    \begin{tabular}{|l|*{3}{c|}}
         \hline
         & HRED & LSTM & VHRED \\
         \hline
@@ -50,12 +51,11 @@
 
 \begin{table}
     \centering
-    \caption{Utterance Decoder}
-    \begin{tabular}{|l|*{3}{r|}}
+    \caption{\#Hidden Units of Utterance Decoder}
+    \label{tab:HiddenUnitsOfUtteranceDecoder}
+    \begin{tabular}{|l|*{3}{c|}}
         \hline
-        & \multicolumn{3}{c|}{\#Hidden Units} \\
-        \hline
-        HRED & LSTM & VHRED \\
+        & HRED & LSTM & VHRED \\
         \hline
         LSDSCC & 1000 & 2000 & 1000 \\
         \hline
@@ -65,10 +65,3 @@
         \hline
     \end{tabular}
 \end{table}
-
-
-% \begin{table}[htb]
-%     \centering
-%     \caption{Model Configurations}
-%     \label{tab:model_config}
-% \end{table}

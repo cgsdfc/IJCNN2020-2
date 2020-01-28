@@ -402,13 +402,7 @@
 \maketitle
 
 \begin{abstract}
-  Evaluating generative dialogue systems with automatic metrics is a known challenge.
-  It has been shown that word-overlap metrics and word-embedding metrics correlate poorly with human judgments. 
-  In this paper, we highlight another problem of metrics-based evaluation through an empirical study.
-  We show that different families of metrics tend to introduce their own bias into the evaluation process. This is observed by clu  which means fine-tuning the system on one set of metrics may yield a gotcha when testing with another set of metrics.
-  This infeasibility again adds to the ineffectiveness of evaluation done alone with metrics.
-  To the end of utilizing metrics at its best, we offer several pragmatic suggestions
-  on the use of automatic metrics to avoid the issue of metric inconsistency.
+    Evaluating generative dialogue systems with automatic metrics is a difficult problem. It has been shown that the word-overlap metrics such as BLEU and the word-embedding metrics correlate poorly with human judgments. In this paper, we highlight yet another problem of evaluation with metrics through an empirical study. We show that regardless of the correlation with human judgments, the scores of these metrics do not correlate well with one another, which means fine-tuning the system on one set of metrics may yield a gotcha when testing with another set of metrics. This infeasibility again adds to the ineffectiveness of evaluation done alone with metrics. To the end of utilizing metrics at its best, we offer several pragmatic suggestions on the use of automatic metrics to avoid the issue of metric inconsistency.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -459,7 +453,7 @@ To ease our demonstration, we define some symbols. A \emph{model} denoted by $m$
 \subsection{Metrics}
 We extend the set of metrics studied by \cite{HowNot} with some new ones from the recent literature, namely ADEM \cite{ADEM} and Distinct-N \cite{MMI}. We make a quick review on these metrics.
 
-\paragraph{BLEU.}
+\paragraph{BLEU}
 BLEU \cite{BLEU} is a classical metric for machine translation that reports a high correlation with human scores on the system level. It owes the quality of a hypothesis to its similarity to multiple references. It computes the geometric mean of consecutive orders of n-gram precision, multiplied by a brevity penalty.
 \begin{align}
     p_n &= \frac{ |C_n \cap R_n| }{ |R_n| } \\
@@ -530,11 +524,11 @@ The HRED model \cite{hred-qs,HRED} features a hierarchical encoding mechanism th
 The VHRED model \cite{VHRED} extends the HRED model with a variational inference mechanism. Essentially, VHRED injects into the utterance decoder random variables that are sampled from a high-dimension normal distribution, the parameters of which are conditioned on the context vector $e_d$. With the randomness at the decoder, VHRED is able to model the uncertainty and ambiguity in the dialogues, generating more diverse responses \cite{A_Short_Review}.
 
 \paragraph{Training Procedure}
-The configurations for different model components are shown in table \ref{tab:model_config}. We used Adam \cite{AdamOpt} as our optimizer and applied gradient clipping with a threshold of 1. The learning rate was set to 0.0002 on the Ubuntu corpus and 0.0002 on the others. All the models were trained on a Nvidia GTX for at least one week. We used random sampling when testing.
+The configurations for different model components are shown in table \ref{tab:ParametersOfUtteranceEncoder}, \ref{tab:ParametersOfContextEncoder}, and \ref{tab:RNNTypeOfUtteranceDecoder}. We used Adam \cite{AdamOpt} as our optimizer and applied gradient clipping with a threshold of 1. The learning rate was set to 0.0002 on the Ubuntu corpus and 0.0002 on the others. All the models were trained on a Nvidia GTX for at least one week. We used random sampling when testing.
 \input{data/model_config.tex}
 
 \subsection{Datasets}
-In this research, we select three commonly used datasets, the statistics of which are listed in table \ref{tab:dataset_stats}. These datasets represent three common domains in the literature, namely technical support, movie subtitles and online forums.
+In this research, we select three commonly used datasets, the statistics of which are listed in table \ref{tab:StatisticsOfTrainingSet} and \ref{tab:StatisticsOfTestingSet}. These datasets represent three common domains in the literature, namely technical support, movie subtitles and online forums.
 \input{data/dataset_stats.tex}
 
 \paragraph{Ubuntu Dialogue Corpus}
@@ -548,8 +542,8 @@ LSDSCC \cite{LSDSCC} is a \emph{Large Scale Domain-Specific Conversation Corpus}
 
 \section{Experiment Study}
 \subsection{System-Level Scores}
-\input{data/system_scores.tex}
-We first measured the system-level scores for all settings, shown in table \ref{tab:system_scores}. The system-level score reflects the average performance of a model trained on a dataset. For metrics that do not have an explicit system-level definition, we took the arithmetic average of their example-level scores.
+\input{data/system_level_scores}
+We first measured the system-level scores for all settings, shown in table \ref{tab:SystemLevelScores}. The system-level score reflects the average performance of a model trained on a dataset. For metrics that do not have an explicit system-level definition, we took the arithmetic average of their example-level scores.
 
 The system-level scores of different metrics look quite consistent in terms of the best performing model on a certain dataset. On LSDSCC, for example, the HRED model beats all the other models on all but one metrics, while on OpenSubtitles, the VHRED model wins the best of most of the metrics. The system-level score seems to be able to distinguish state-of-the-art models from baselines, since most of the metrics agree on which model is the best.
 
@@ -585,7 +579,7 @@ Specifically, on the one hand, we find that metrics based on word overlap tend t
 
 \subsection{Qualitative Analysis}
 \input{data/example/OpenSubtitles.tex}
-Table \ref{tab:Example_OpenSubtitles} serves as an example of the inter-metrics inconsistency. The response from HRED mentions `her room', which is relevant to the subject `she' in the context and the verb `starts' matches the `start' in the reference. The response from VHRED does not share any token with the context or reference, but it remarks the event mentioned by the context so it is quite a reasonable one.
+Table \ref{tab:AnExampleFromOpenSubtitles} serves as an example of the inter-metrics inconsistency. The response from HRED mentions `her room', which is relevant to the subject `she' in the context and the verb `starts' matches the `start' in the reference. The response from VHRED does not share any token with the context or reference, but it remarks the event mentioned by the context so it is quite a reasonable one.
 
 All three responses share no n-grams with either the context or the reference in terms of exact matching. Thus, all the word-overlap metrics yield a zero value. However, all the word-embedding metrics give non-zero value, making them incompatible with the word-overlap metrics.
 

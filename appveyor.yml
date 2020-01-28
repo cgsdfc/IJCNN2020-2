@@ -8,17 +8,17 @@ install:
 #  - C:\ProgramData\chocolatey\lib -> appveyor.yml
 
 build_script:
-  - cmd: latexmk .\main.tex -pdf
+  - cmd: latexmk .\IJCNN2017.tex -pdf
 
 artifacts:
-  - path: main.pdf
+  - path: IJCNN2017.pdf
     name: Paper
 deploy:
   - provider: GitHub
     description: New PDF made by Miktex
     auth_token:
       secure: AxKyd9x91aD6ZpLtvmw8iQvR1LkvduvZUcJbU2zqwbWXBBr2SI/cr4jod8SIQHmB
-    repository: cgsdfc/ICONIP2019
+    repository: cgsdfc/IJCNN2017
     artifact: Paper
     draft: false
     force_update: true

@@ -75,7 +75,7 @@
 \usepackage{textcomp}
 \usepackage{stmaryrd}
 \usepackage{epsfig}
-\usepackage{subfigure}
+% \usepackage{subfigure}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{float}
@@ -95,6 +95,7 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
+\usepackage{subcaption}
 % Add the compsoc option for Computer Society conferences.
 %
 % If IEEEtran.cls has not been installed into the LaTeX system files,
@@ -393,12 +394,6 @@
 \title{Automatic Evaluation of Generative Dialogue Systems: An Empirical Study}
 
 \author{
-%\IEEEauthorblockN{Wenge Rong}
-%\IEEEauthorblockA{Research Institute of Beihang in Shenzhen\\
-%VU Park, High-tech Industrial Estate\\
-%Shenzhen 518000, China\\
-%w.rong@buaa.edu.cn}
-%\and
 \IEEEauthorblockN{Cong Feng, Wenge Rong, Jianxin Yang, Yuanxin Ouyang, Zhang Xiong}
 \IEEEauthorblockA{School of Computer Science and Engineering, Beihang University, Beijing 100191, China\\
 \{congfeng, w.rong, yjx17, oyyx, xiongz\}@buaa.edu.cn}
@@ -429,238 +424,79 @@ Automatic Metrics, Dialogue Response Generation, Chatbot
     Following these observations, we clustered the metrics based on the pairwise correlations of their corresponding samples. The results show that similar metrics tend to cluster together, indicating a high pairwise correlation within the same group. According to the experiment results, we argue that the scores given by dissimilar metrics have the risk of high inconsistency, which is yet another pitfall of using automatic metrics. Therefore, it is strongly recommended to choose consistent metrics for the ease of comparison across different settings.
 
 \section{Related Work}
-The most traditional way for paraphrase identification was based on simple lexical matching and vector-based similarity approach. The feasibility of exploiting string-based features on both word and character level has been revealed to some extent \cite{selfdef:conf/altw/WanDDP06}. In order to measure the similarity of texts, Mihalcea et al. used corpus-based and knowledge-based measures of similarity acquired from the word-level similarity \cite{DBLP:conf/aaai/MihalceaCS06}. Though this kind of approaches is easy to implement by statistical analysis in large text collections, the importances from semantic similarity's perspective is also widely mentioned, e.g., based on corpus like Wikipedia \cite{DBLP:conf/ijcai/GabrilovichM07}. Recently many work also utilised distributed representations like word embedding to calculate the word and/or sentence similarity \cite{DBLP:conf/icml/SantosZ14}. Besides the similarity realisation from word level, several works also proposed syntactic oriented solutions trying to integrate some external information into the paraphrase identification process. e.g., parse tree \cite{DBLP:conf/acl/DasS09}.
 
-Besides the advanced feature engineering, a lot of machine learning based models are also proposed to solve this problem, e.g., SVM, KNN and etc \cite{DBLP:conf/fintal/KozarevaM06}. Recently, with the development of neural network, it is becoming interesting to ask if it will be helpful when advanced neural models integrated with sophisticated feature? In fact, many recent work has focused more on modelling with distributed representations and neural network architectures and one of the examples is CNN, which has been applied into many natural language processing tasks. For instance, CNN is used for relation extraction and relation classification tasks \cite{nguyen2015relation}. CNNs are also used for learning sentence-level representation with semantically meaning \cite{DBLP:conf/cikm/ShenHGDM14}. Kim proposed a CNN architecture on various classification datasets, including Sentiment Analysis and Topic Categorization tasks \cite{DBLP:conf/emnlp/Kim14}. This CNN architecture is powerful and achieves good result though very simply. It uses the concatenated word embeddings as input, containing the semantic information of words. Kalchbrenner et al. described a convolutional neural network to represent sentences, in which they uses dynamic k-max pooling to handle input sentences of varying length \cite{DBLP:conf/acl/KalchbrennerGB14}. Without using word vectors like word2vec, Johnson and Zhang trained a CNN from scratch and applied convolutions to one-hot vectors directly \cite{DBLP:conf/nips/JohnsonZ15}. In order to reduce the number of parameters of the neural network, they also proposed a space-efficient bag-of-words-like representation for the input data. Recently, there are also papers in applying CNN to characters extraction. An evidence is that dos Santos and Zadrozny trained character-level embeddings and applied to Part of Speech tagging \cite{DBLP:conf/icml/SantosZ14}.
+    Previous works on automatic metrics have mostly focused on the correlation between the metrics and human judgments. After all, the advantages of automatic metrics would be largely compromised if they cannot reflect human judgments. For example, in machine translation, where automatic metrics have been established to reduce human labor, almost every newly proposed metrics report an improved human correlation, as in \cite{NIST}, \cite{METEOR}, and \cite{chrf}.
 
-%There are three corpus-based measures that have been used more frequently: (1) pointwise mutual information by [12], (2) latent semantic analysis by [13], and (3) explicit semantic analysis by [14]. There are also several early knowledge–based methods: [15, 16]. However, the way they calculated the similarity between words from large text collections were based on a statistical way, which has been replaced by word representation mostly. [17] measured the semantic similarity by using a corpus-based measure of semantic word similarity also, but combined with normalized and modified versions of the Longest Common Subsequence string matching algorithm. Later, machine learning method began to be applied to this task. [18] utilized three machine learning classifiers SVM, k-nn, maximum entropy on paraphrase identification, combining lexical and semantic similarity information. [5] integrated world-knowledge into current semantic models and crossed the language boundary to get a better and more robust semantic relatedness representation, which is helpful to improve the abstraction of meaning. Besides, many previous work focused on feature engineering. [2] explored string-based features on both word and character level, including n-gram overlap features. [3] modeled the syntax-based features between the two sentences. And [19] used knowledge-based measures for calculating the semantic similarity of sentences. [20] presented a method based on improved pre-processing and semantic heuristics features.
+    In dialogue response generation, to address the issue of low metric-human correlation, various semantic-based methods have been proposed. For example, the ADEM metric proposed by Lowe et al. models the human judgments with a feed-forward neural network \cite{ADEM}. Their concise architecture achieves a high correlation with human scores in various settings. The RUBER metric proposed by Tao et al. takes an asymmetric approach w.r.t the response-context pair and response-reference pair, where the former is modeled by a neural network and the latter is measured by an embedding-based metric. They combined two scores with various heuristics and achieved improvements on a Chinese corpus \cite{RUBER}. In brief, correlation with human judgments has been the supervised signal guiding the evolution of automatic metrics.
 
-%Many recent work has focused more on modeling with distributed representations and neural network architectures rather than feature engineering. Typically, Convolutional neural network(CNN) is used in computer vision area. CNN contributed much to many major breakthrough in core area of computer vision. More recently, CNN have also been applied many natural language processing tasks and gotten some exciting results. [21] introduced CNNs for Relation Extraction and Relation Classification tasks. [22, 23] proposed methods of learning sentence-level representation with semantically meaning using CNN that were used in information retrieval.
+    On the other hand, automatic metrics have been constantly doubted of their capability to reflect human judgments. In one of the earliest attempts to the response generation problem, Ritter et al. made an initial examination on the suitability of BLEU to this field leveraging the human data they collected \cite{Ritter11}. They found that the BLEU scores were very low even on the system level and the correlation was modest. Shang et al. argued that BLEU did not apply as the reasonable responses are too vast for the references to cover \cite{Shang}.
 
-%[7] proposed a CNN architecture on various classification datasets, including Sentiment Analysis and Topic Categorization tasks. This CNN architecture is powerful and achieves good result though very simply. It uses the concatenated word embeddings as input, containing the semantic information of words. [8] described a convolutional neural network to represent sentences, in which they uses dynamic k-max pooling to handle input sentences of varying length. Without using word vectors like word2vec, [24] trained a CNN from scratch. It applies convolutions to one-hot vectors directly. In order to reduce the number of parameters of the neural network, the author also proposes a space-efficient bag-of-words-like representation for the input data. Recently, there are also papers in applying CNN to characters. [25] trained character-level embeddings, joined them with word embeddings, and applied to Part of Speech tagging with CNN. [25] propose a CNN architecture that utilized character- to sentence-level information on sentiment analysis task of short texts.
+    Another popular metric is perplexity, which is generally used to evaluate statistical language models. Vinyals et al. showed that their Seq2Seq dialogue model achieved a much lower perplexity than the n-gram baseline, but they also admitted the drawbacks of using such a metric \cite{GoogleChatbot}. Serban et al. also used perplexity to evaluate their models in \cite{HRED}, along with other metrics. Like in \cite{GoogleChatbot}, they were not clear about how well these metrics accounted for the grammatical correctness and semantic coherence of the responses.
 
-%combine them on the top layer to two sentences task, such as paraphrase identification.
+    An extensive study of metric-human correlation was conducted by Liu et al. \cite{HowNot}. Their study took into account of various settings, such as both retrieval and generative models and both technical and non-technical datasets. It was revealed that although these metrics could distinguish state-of-art models from baseline models, none of them correlated highly with human scores. Their work has left us two questions:
+    \begin{enumerate}
+        \item How can we improve the metric-human correlation?
+        \item Why do the existing metrics correlate badly with human judgments?
+    \end{enumerate}
+    Previous works that proposed enhanced metrics endeavored to answer the first question, while we try to shed some light on the second one. In particular, we are curious about what can we learn when scores from different metrics are put together and compared across various settings.
 
-%proposed a CNN based method to model matching relationship between a question and answer in community question answering area by
+	To understand why some metrics correlate poorly with human judgments, we show that there are general inconsistencies among these metrics. Intuitively, if a set of metrics have low pairwise correlations, it is less likely that all of them would correlate highly with human judgments, which indicates that some of them must correlate poorly with human judgments. Along this line of thought, we arrive at an intermediate explanation to the poor performance of automatic metrics, backed by an empirical study. With this in mind, we can partially understand why these metrics fail and make improvements from the lesson we learned.
 
-While most CNN architecture was used for single sentence model \cite{DBLP:conf/semeval/EyeciogluK16}, Shen et al. proposed a similarity matrix (S-matrix) \cite{DBLP:conf/aaai/ShenRSOX15} to model question and answers sent for CNN for similarity detection. Furthermore, Socher et al. presented an architecture based on RNN that can compute vector space representations on all nodes of a parse tree \cite{DBLP:conf/nips/SocherHPNM11}. Inspired by their work, besides the syntactic and semantic information within a sentence, this research also tried to combine the better representation of relation between sentences and CNN to improve the performance of paraphrase identification.
+\section{Experiment Setup}
+    \subsection{System-Level Scores}
+    \input{data/system_scores.tex}
+    We first measured the system-level scores for all settings, shown in table \ref{tab:system_scores}. The system-level score reflects the average performance of a model trained on a dataset. For metrics that do not have an explicit system-level definition, we took the arithmetic average of their example-level scores.
 
-%We improved the representation of relationship between two sentences by incorporating the lexical, semantic, and syntactic information based on word and phrase level.
+    The system-level scores of different metrics look quite consistent in terms of the best performing model on a certain dataset. On LSDSCC, for example, the HRED model beats all the other models on all but one metrics, while on OpenSubtitles, the VHRED model wins the best of most of the metrics. The system-level score seems to be able to distinguish state-of-the-art models from baselines, since most of the metrics agree on which model is the best.
 
-%which can gain lexical and sequential information. The similarity is quite a simple representation of the relation between questions and answers, Later, [26] improved the S-matrix by using a translation matrix to get a better correlation score between word in questions and word in answers, rather than simply use the cosine values of word vectors. Inspired by the idea of S-matrix. We improved the representation of relationship between two sentences by incorporating the lexical, semantic, and syntactic information based on word and phrase level. [10] present a architecture based on recursive neural networks that can compute vector space representations on all nodes of a parse tree, some of which means multi-word phrases and sentences. Our paper is based on their works. We try to combine the better representation of relation between sentences and CNN to improve the performance of paraphrase identification.
+    However, the consistency among the metrics does not necessarily lead to a high correlation with human judgment, as observed in \cite{HowNot}. Moreover, since the system-level score is calculated by accumulating over the example-level scores, it is possible that the inconsistency on the example-level is hidden away. To reveal the possible inconsistency, we performed analyses on the example-level scores.
 
-\section{Methodology}
+    \subsection{Example-Level Scores}
+    On the example level, a matrix $M \in R^{N \times M}$ is calculated for each model instance, where $N$ is the number of examples and $M$ is the number of metrics. Each row $r_i$ of the matrix is the scores of all metrics for an example $e_i$, while each column $c_j$ is the values of a metric $s_j$ computed for all examples. All the metrics share the same set of examples within a matrix. Thus, the correlation of any two columns $c_i, c_j$ can be understood as to how much the corresponding metrics $s_i, s_j$ agree on their shared examples. We compute the pairwise correlations of the metrics and highlight the degree of correlation with heatmaps, as shown in figure \ref{fig:corr_heatmap}. We used Pearson's r and all the results are statistically significant.
 
-In order to solve the paraphrase identification task, first, we mapped words to a low dimensional space by using word embedding to get the words semantic representation. Second, we obtained the vectors representation of phrases and sentence based on parse tree combining Recursive Autoencoder to get the modelling information of phrases and sentences. Third, we created three types of similarity matrix using these vectors representation to get the complicated interrelationship between two sentences. Afterwards, we use these similarity matrix as input of CNN to predict the probability of two sentences as being paraphrased. The overall proposed paraphrase identification framework is depicted in Fig. \ref{fig:overall}.
+    \input{data/heatmap.tex}
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.9\textwidth]{figures/Overall}
-	\caption{The Overall Framework}
-	\label{fig:overall}
-\end{figure*}
+    Each subfigure in figure \ref{fig:corr_heatmap} is plotted from the correlation matrix for a model instance. The color of the cells represents the degree of correlation between the row and column labels, with red, blue, and white stand for positive, negative and zero correlation, respectively. One can spot red regions divided by white or blue lines from these plots, showing the signs of high local correlations.
 
-\subsection{Word Representation}
+    To better observe the agreement and disagreement among the metrics, we applied hierarchical clustering to the metrics based on their correlations and the results are shown in figure \ref{fig:hierarchy}. A hierarchical clustering algorithm starts with a forest of nodes and iteratively merges them into larger clusters until the root cluster is created. We used the following node-level distance $\textit{dist}(\cdot, \cdot)$ and cluster-level distance $d(\cdot, \cdot)$:
+    \begin{align}
+        \textit{dist}(i, j) &= 1 - \textit{corr}(i, j) \\
+        d(u, v) &= \frac{\sum_{i,j}\textit{dist}(i, j)}{|u| \cdot |v|}
+    \end{align}
+    where $i$ and $j$ are points in cluster $u$ and $v$, respectively. $|u|$ and $|v|$ are the cardinalities of cluster $u$ and $v$, respectively\footnote{This is also known as the average method.}. Again the correlation is based on Pearson's r.
+    \input{data/hierarchy.tex}
 
-Word embedding nowadays has become the basis of various natural language processing tasks. The purpose of word embedding is to represent word in a vector space. One of the most classical model is a language model which can learn the representation of word into a low-dimensional space and predict a word when given its context \cite{DBLP:conf/icml/MnihT12}. As such semantic information of word can be represented by such a low-dimensional word embedding. In this research, we just follow the work presented in \cite{DBLP:conf/nips/SocherHPNM11} and adopt the 100-dimentional vectors trained by the unsupervised method in \cite{DBLP:conf/icml/CollobertW08}. %. [28] obtain the word representation by using statistic way of collecting the co-occurrence of words and [29] used a neural-network based architecture to train these word embeddings.
+    From figure \ref{fig:hierarchy}, we observe a hierarchy of agreement among different metrics. The clusters that were created in the earlier iterations appear closer to the leaves of the tree, which indicates higher pairwise correlations or stronger inter-metric agreement. As a cluster grows larger, its children become loosely connected with greater distances. It is interesting to find that the dendrograms in figure \ref{fig:hierarchy} share some regular structure, which has an observable correspondence to the category of the metrics. Across all the settings, we generally observe these independent clusters, named after their shared category or a representative element:
+    \begin{enumerate}
+        \item Word-Overlap: a large cluster that contains many subclusters formed by different word-overlap metrics, such as BLEU, ROUGE, and METEOR.
+        \item Word-Embedding: a small cluster that contains Vector-Average, Vector-Extrema, and Greedy-Matching.
+        \item ADEM: a standalone cluster formed by ADEM.
+        \item Distinct-1: a metric that might belong to some cluster or become a standalone cluster depending on the dataset involved.
+        \item Distinct-2 and \#words: a generally observable cluster.
+    \end{enumerate}
 
-Once the word embeddings are learned, we can represent a sentence as $(x_1,x_2, \ldots,x_n)$, where $x_i$ is the vector representation of each word. We use them to create similarity matrix and use them as the leaf nodes of a parse tree to obtain the vectors representation of phrases and sentences.
+    Those clusters confirm our hypothesis on the inconsistency among different metrics. Luckily, there are still some forms of agreement that the same cluster of metrics can reach. Unfortunately, the exact reasons why the clusters are formed this way are unclear to us. Although our experiments have a simple procedure, it should be noted that the mechanism behind each step has a complex nature. For example, the dialogue datasets are intrinsically very diverse and the way the generative models work is not well-understood. Besides, it is also unclear how these metrics reflect the desirable properties of a response. Hence we can only conclude that similar metrics tend to have consistent results on the example-level. The similarity of metrics generally refers to their mechanisms, such as the way to extract overlap units or derive semantics from an utterance, or the way to combine different components.
 
-\subsection{Vectors Representation of Phrases and Sentences}
-%Figure1: architecture of Unfolding Recuresive Autoencoder based on a parse tree
+    Specifically, on the one hand, we find that metrics based on word overlap tend to have high pairwise correlations since they all make use of the n-gram statistics somehow. On the other hand, it is confirming to observe that ADEM does not correlate with all the other metrics since it has a much higher correlation with human judgment while other metrics do not.
 
-In this paper, parse tree is also employed to represent the sentences. The leaf nodes of the parse tree is vector representation of words in a given sentence. The purpose of the Unfolding Recursive Autoencoder is get the vectors representation for nodes from that leaf nodes, which represent the phrases and sentence.
+    \subsection{Qualitative Analysis}
+    \input{data/example/OpenSubtitles.tex}
+    Table \ref{tab:Example_OpenSubtitles} serves as an example of the inter-metrics inconsistency. The response from HRED mentions `her room', which is relevant to the subject `she' in the context and the verb `starts' matches the `start' in the reference. The response from VHRED does not share any token with the context or reference, but it remarks the event mentioned by the context so it is quite a reasonable one.
 
-We simply introduce the method of RAE proposed by \cite{DBLP:conf/naacl/YinS15}. Given a list of word vectors $x=(x_1,x_2,\ldots,x_n)$, based on the tree structure given by a syntactic parser, an auto-encoder is learned to map sentences into vectors. In the encoding step, the parents node is calculated by a standard neural network layer from its children:
-\begin{equation}
-y_1=f(W_e [x_2;x_3]+b)
-\end{equation}
-where $[x_2;x_3]$ is simply the concatenation of the two children, $f$ is an element-wise activation function such as $\mathit{tanh}$ and $W_e \in \mathbb{R}^{n \times 2n}$ the encoding matrix need to learn. In the decoding step, The unfolding produces the reconstructed leaves by starting at $y_2$ and computing.
-\begin{equation}
-[x’_1;y’_1]=f(W_d y_2 +b)
-\end{equation}
+    All three responses share no n-grams with either the context or the reference in terms of exact matching. Thus, all the word-overlap metrics yield a zero value. However, all the word-embedding metrics give non-zero value, making them incompatible with the word-overlap metrics.
 
-The reconstruction error is then computed from a concatenation of the word vectors in that node's span.
-\begin{equation}
-E_{rec}(y_{(I,j)})=\|[x_i;\cdots; x_j]- [x'_i;\cdots ;x'_j]\|^2
-\end{equation}
-
-After learning the vectors of phrases and sentence, the whole sentence is represented as $(x_1,x_2,\cdots,x_n,x_{n+1},\cdots,x_{2n-1})$, where $ x_1,x_2,\cdots,x_n $ are word vectors, and $x_{n+1},x_{n+2},\cdots,x_{2n-2}$ are phrase vetors and $x_{2n-1}$ is sentence vector. This sentence representation is also used to create similarity matrix.
-
-\subsection{Sentences Pairs Representation}
-%\subsection{Similarity Matrix}
-Consider a pair of sentences $ S1:(x_1^1,x_2^1,\cdots,x_m^1) $ and $ S2:(x_1^2,x_2^2,\cdots,x_m^2 )$ where $m$ and $n$ is the length of sentences respectively. According to S-Matrix in \cite{DBLP:conf/aaai/ShenRSOX15}, we can map this pair of sentences to a similarity matrix $\sum$ of size $n*m$, in which the each item is defined as below:
-\begin{equation}
-\delta_{ij}=\cos (x_i^1,x_j^2)
-\end{equation}
-
-In this research, we will discuss and compare three types of similarity matrix. Each matrix has the same rows and columns.
-
-1. Each sentence is represented as $(x_1,x_2,x_3,\cdots,x_n)$, and $x_i$ are the word embeddings in correspond position of sentence. We use this sentence representations to create a similarity matrix mentioned above. And then the matrix is tiled to a fixed size:
-\begin{equation}
-\delta_{ij}=\cos (x_{I \mod m}^1,x_{j \mod n}^2)
-\end{equation}
-
-2. Each sentence is represented as $(x_1,x_2,\cdots,x_n,x_{n+1},\cdots,x_{2n-1})$, besides word embedding like (1), $(x_{n+1},\cdots,x_{2n-1})$ are phrases and sentence representation trained from unfolding Recursive Autoencoder of [10]. And then the matrix is tiled to a fixed size.
-
-3. After obtaining the S-matrix mention in (2) before tile, we use the way of dynamic pooling to map the matrix into a fixed size rather than tile.
-
-These similarity matrix are then used as the input of the next CNN architecture.
-
-\subsection{Prediction}
-
-Restricted by the size of the datasets, unlikely the quantity of parameters mentioned in \cite{DBLP:conf/aaai/ShenRSOX15}, we have to carefully control the number of parameters trained in CNN. As such we did are: (1) canceling the final fully connected layer; (2) adding another convolutional layer; and (3) using dynamic filter size, as shown in Fig. \ref{fig:cnn}.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/Framework}
-	\caption{Architecture of Deep Convolutional Neural Network. C1, C2, C3 are convolutional layers with 5 feature maps. M1, M2 ,M3 are max-pooling layer. Each unit in max-pooling layer is connected to a 2×2 neighborhood in the previous convolutional layer. The Output is fully connected with the last pooling layer M3}
-	\label{fig:cnn}
-\end{figure}
-
-In term of that we have different size of input matrix, and in the experiment, we find that if we apply the same size filter to those input matrix all the time, the performance would be quite worse. If the filter size is too large, it is easy to overfitting. If the input size if too large and the filter size is too small, the model is hard to learn. So we propose a method to choose the filter size $filter(s_f)$ dynamically based on the size of input $matrix(s_i)$.
-\begin{equation}
-s_m = \lfloor s_i - s_f +1 \rfloor / s_p
-\end{equation}
-where $s_m$ is the size of feature map after pooling, $s_p$ is the size of pooling matrix. Our method is try to fix the size of the last feature map but ensure the size of filter not to be two large. Our CNN architecture has the following three layers.
-\begin{eqnarray}
-s_m = \lfloor \frac{\lfloor \frac{\lfloor s_i - s_f + 1\rfloor}{s_p} - s_f + 1\rfloor}{s_p} - s_f + 1 \rfloor / s_p
-\end{eqnarray}
-
-In this research, we fixed the size of last layer feature maps to $2 \times 2$, and the size of pooling matrix is $2 \times 2$. And in order to control the number of parameters, we set the size of filer is not larger than 6. So the relationship between size of $filter(s_f)$ and size of input $matrix(s_i)$ is:
-\begin{equation}
-s_f= \min (\lfloor \frac{s_i -14}{7} \rfloor,6)
-\end{equation}
-
-Furthermore, following the suggestion in \cite{DBLP:conf/nips/SocherHPNM11}, we also incorporate some number features. We combine the last output of the layer of CNN and these number features and map to hidden layer as shown in Fig. \ref{fig:rae}.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/Predication}
-	\caption{Prediction combining the number features}
-	\label{fig:rae}
-\end{figure}
-
-
-\section{Experimental Study}
-\subsection{Dataset}
-In this section, we demonstrate our proposed method on Microsoft Research Paraphrase Corpus (MSRPC), which is a commonly used dataset for paraphrase identification. It consists of 5,801 sentence pairs. We used the standard split of 4,076 training pairs (67.5\% of which are paraphrases) and 1,725 test pairs (66.5\% of which are paraphrases). The average of length of the sentences is 21, the shortest sentence has 7 words, and the longest one has 36 words. The evaluation metrics will use the traditional Accuracy and F1.
-
-\subsection{Hyperparameters and Training Details}
-we chose the negative log-likelihood as out cost function, which is also called cross-entropy cost function. The paraphrase identification task is a binary classification problem. So the cost function $J(\theta)$ can be written as:
-\begin{equation}
-J(\theta) = -\sum_{i} (t_i \log y_i + (1-t_i)(1- \log y_i))
-\end{equation}
-where $t_i$ is the target, and $y_i$ is our model’s prediction which is the probability of the two sentences are paraphrased. We further add L2-regularization after the cost function.
-\begin{equation}
-J(\theta) = -\sum_{i} (t_i \log y_i + (1-t_i)(1- \log y_i)) + \beta || \theta ||^2
-\end{equation}
-
-%And we used mini-batch gradient descent optimization method described as follow:
-For training process, in this research we adopted a minibatch size of 50, a learning rate of 0.04, and a per-minibatch L2 regularization strength of $10^{-4}$. We also employed the 100-dimentional vectors trained by the unsupervised method \cite{DBLP:conf/icml/CollobertW08}, while the word vectors do not updated in our model. As to the CNN model, each convolutional layer in our proposed model has 5 feature maps. Furthermore, we will compare our proposed model against multilayer perception (MLP) based method in the following section. With regard the setting for MLP, we adopted two layers MLP model and the each hidden layer has 100 neurons.
-
-\subsection{Evaluation Metrics}
-F-measure and accuracy are the official evaluation metrics used to rank this task. Assume that the original samples are separated into two categories: positive samples and negative samples. The output of prediction can be classified as true positive ($tp)$), true negative ($tn$), false positive ($fp$), and false negative ($fp$). As such the evaluation metrics can be defined as:
-\begin{equation}
-Precision = \frac{tp}{tp + fp}
-\end{equation}
-\begin{equation}
-Recall = \frac{tp}{tp + fn}
-\end{equation}
-\begin{equation}
-Accuracy = \frac{tp+tn}{tp + tn + fp + fn}
-\end{equation}
-\begin{equation}
-F1 = 2\frac{Precsion \times Recall}{Precision + Recall}
-\end{equation}
-
-
-\subsection{Results and Discussion}
-The first experimental study will test the difference of the three types of representation of the relationship between sentences as mentioned in section 3, i.e., (a) Word embedding + Tile; (b) Word embedding + RAE + tile; (c) Word embedding + RAE + dynamic pooling. We used the parameters of RAE trained in \cite{DBLP:conf/nips/SocherHPNM11} to create the matrix of (b) and (c).
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/Evolution.pdf}
-	\caption{Evolution of accuracy with different size of matrix after tile}
-	\label{fig:evolution}
-\end{figure}
-
-In order to evaluate whether a pair of sentences are paraphrased or not, we used these matrix as input to Logistic Regression (LR), Multi-Layer Perceptron (MLP) and CNN. In order to control the number of parameters, we applied CNN with two convolutional layers to matrix got from (c), and the filter size is $2 \times 2$; we applied CNN with three convolutional layers to matrix obtained from (a) and (b), while the filter size is dynamic. Figure \ref{fig:evolution} shows the evolution of accuracy with different size of matrix after tile. It is observed that 40 x 40 is the best choice for (a), and 50 x 50 is the best choice for (b).
-
-\begin{table*}[!t]
-	\center
-	\caption{Performance of LR, MLP, and CNN on three different types of Similarity matrix}
-	\begin{tabular}{|l|c|c|c|c|c|c|}
-		\hline
-		\multirow{2}{*}{Input Matrix} & \multicolumn{2}{c|}{Logistic Regression} & \multicolumn{2}{c|}{MLP} & \multicolumn{2}{c|}{CNN} \\
-		\cline{2-7}
-		& Accuracy & F1      & Accuracy & F1      & Accuracy & F1      \\ \hline
-		WE+Title           & 68.29\%  & 81.11\% & 69.10\%  & 80.38\% & 70.26\%  & 79.97\% \\ \hline
-		WE + RAE + tile    & 70.03\%  & 81.44\% & 70.03\%  & 81.44\% & 73.04\%  & 82.18\% \\ \hline
-		WE + RAE + pooling & 71.48\%  & 82.27\%	& 72.17\%  & 82.36\% & 73.33\%  & 82.50\% \\ \hline
-	\end{tabular}
-	\label{tb1}
-\end{table*}
-
-\begin{table*}[!t]
-	\center
-	\caption{Performance on three different types of Similarity matrix with number features (NF)}
-	\begin{tabular}{|l|c|c|c|c|c|c|}
-		\hline
-		\multirow{2}{*}{Input Matrix} & \multicolumn{2}{c|}{Logistic Regression} & \multicolumn{2}{c|}{MLP}& \multicolumn{2}{c|}{CNN} \\
-		\cline{2-7}
-		& Accuracy & F1      & Accuracy & F1      & Accuracy & F1      \\ \hline
-		WE + title + NF         & 74.32\%  & 82.44\% & 74.55\%  & 82.12\% & 75.01\%  & 82.75\% \\ \hline
-		WE + RAE + tile +NF     & 74.49\%  & 83.06\% & 74.49\%  & 83.06\% & 77.10\%  & 83.97\% \\ \hline
-		WE + RAE + pooling + NF & 76.41\%  & 83.30\% & 76.93\%  & 83.75\% & 77.51\%  & 84.38\% \\ \hline
-	\end{tabular}
-	\label{tb1}
-\end{table*}
-
-\begin{table}[!t]
-	\center
-	\caption{Test results on MSRP datasets}
-	\begin{tabular}{|l|c|c|} \hline
-		Model                          & Accuracy   & F1      \\ \hline
-		Mihalcea et al. (2006)         & 65.40\%	& 75.30\% \\ \hline
-		Kozareva and Montoyo (2006)	   & 76.60\%	& 79.60\% \\ \hline
-		Hassan (2011)	               & 68.80\%	& 79.90\% \\ \hline
-		Hu et al. (2014) ARC-I	       & 69.60\% 	& 80.30\%  \\ \hline
-		Hu et al. (2014) ARC-II	       & 69.90\% 	& 80.90\%  \\ \hline
-		Rus et al. (2008)	           & 70.60\%	& 80.50\% \\ \hline
-		Mihalcea et al. (2006)	       & 70.30\%	& 81.30\% \\ \hline
-		Islam and Inkpen (2007)	       & 72.60\%	& 81.30\% \\ \hline
-		Yin et al. (2015)(without pretraining)	& 72.50\% &	81.40\% \\ \hline
-		Zia and Wasif (2012)	       & 74.70\%	& 81.80\% \\ \hline
-		Fernando and Stevenson (2008)  & 74.10\%	& 82.40\% \\ \hline
-		Wan et al. (2006)	           & 75.60\%	& 83.00\% \\ \hline
-        Pang et al.(2016)              & 75.94\%    & 83.01\% \\ \hline
-		Socher et al. (2011)	       & 76.80\%	& 83.60\% \\ \hline
-		Madnani et al. (2012)	       & 77.40\%	    & 84.10\%  \\ \hline
-		Yin et al. (2015)(with pretraining)	& 78.10\% &	84.40\% \\ \hline
-		%		Ji and Eisenstein (2013)	   & 80.4\%	    & 85.9\% \\ \hline
-		WE + RAE + CNN	               & 77.51\%	& 84.38\% \\ \hline
-	\end{tabular}
-	\label{tb1}
-\end{table}
-
-The detailed experimental result is shown in Tables 1-3. From Table 1, it is found that the result of matrix created by RAE is always better than matrix not by RAE, and nearly all the results of neural network models by MLP and CNN are always better than the Logistic Regression, which indicates the advantages of deep neural network and the representation of sentences with more information, except for the result of MLP combined the input matrix made by method(b), which might be caused by too many parameters. Besides, we can also see that the results of CNN are always better than the results of MLP, which means that the CNN model is able to discover deeper relationship of two sentences. From table 2, we can also see the same trends when combining the number features. Furthermore, the dynamic pooling seems to be a better way than tile to deal with the problem of fixed size.
-
-Finally, We compared our results against several methods: cosine similarity with tf-idf weighting \cite{DBLP:conf/aaai/MihalceaCS06}; explicit semantic space by \cite{hassan2011measuring}; combination of lexical and semantic features by \cite{DBLP:conf/fintal/KozarevaM06}; graph subsumption \cite{DBLP:conf/flairs/RusMLMG08}; combination of several word similarity measures \cite{DBLP:conf/aaai/MihalceaCS06}; combination of semantic and string similarity \cite{islam2009semantic}; semantic heuristic features by \cite{ul2012paraphrase}; JCN WordNet similarity with matrix by \cite{fernando2008semantic}; dependency-based features \cite{selfdef:conf/altw/WanDDP06}; recursive autoencoder with dynamic pooling by \cite{DBLP:conf/nips/SocherHPNM11}; combination of eight machine translation metrics by \cite{DBLP:conf/naacl/MadnaniTC12}; CNN model without/with pretraining technique \cite{DBLP:conf/naacl/YinS15}; Convolutional neural network architectures for matching natural language sentences by \cite{DBLP:conf/nips/HuLLC14, DBLP:conf/aaai/PangLGXWC16}.
-
-Table 3 shows that our method achieve better performance than most of those state-of-the-art methods. Our method is also superior to recent neural network model \cite{DBLP:conf/nips/HuLLC14, DBLP:conf/aaai/PangLGXWC16}. There is an interesting point with regard to the method proposed in \cite{DBLP:conf/naacl/YinS15}, the proposed model can only overcome its version without pretaining but only present competitive performance against its version with pretraining. Though with pretraining can enhance the overall performance, it is believed that it will cost extra resources for the training process. But it did give our method some room to further improve.
-
-%\cite{DBLP:conf/emnlp/JiE13} used unsupervised learning method and rich sparse features, obtaining the best result on MSRP.
-
-%PI using semantic heuristic features by [20];
+    In terms of semantic relevance, the responses from both HRED and VHRED are somehow related to the topic of the dialogue, while the response from LSTM looks grammatically incomplete. One will mostly agree that the responses from HRED and VHRED are equally better than that from LSTM. However, the ranks given by the word-embedding metrics do not agree with the manual inspection. For example, they all give higher scores to LSTM than HRED.
 
 \section{Conclusion and Future Work}
-Paraphrase identification is a fundamental task in the area of natural language process. Some work use statistical classifier based on exploring the lexical features on both word and character levels, while other approaches tried to model the syntactic-based features on parse structures of two sentences. With the development of deep learning technology, some scholars employed CNN to conduct natural language process tasks. Inspired by the previous work, it is interesting to ask if those information can be integrated together. In this research, it is found that a better representation of relation between two sentences, containing syntactic and semantic information could be helpful when employing deep neural network like CNN. In future work, we might use the vectors, which could represent the word and its context rather than only word to create similarity matrix \cite{DBLP:conf/conll/MelamudGD16}. Such a similarity matrix might also be promising.
+
+    In this paper, we followed the work of \cite{HowNot} and try to understand the reasons behind low metric-human correlations. We investigated the system-level scores and leveraged statistical analyses to reveal the inter-metrics correlation on the example level. Our study shows a high consistency of metrics on the system level, as shown by others \cite{HowNot,VHRED,GoogleChatbot}. We further show that on the example level, similar metrics tend to score the examples more consistently and the degree of correlations forms a hierarchical cluster.
+
+    Intuitively, different metrics judge a dialogue from different angles, while human beings judge it from a quite comprehensive perspective. This might explain why the metrics do not correlate well with human judgments. Our discovery of the example-level correlation-based hierarchical clusterings of metrics is a novel contribution.
+
+    Based on the observations, it is recommended to avoid using a set of metrics that have low pairwise correlations since that will make the example-level scores divergent and hard to explain. We also urge against the use of metrics that are known to have poor correlations with human judgments. In the future, we would like to look deeper into the mechanisms behind the metric-human correlations.
 
 \section*{Acknowledgements}
-This work was partially supported by the National Natural Science Foundation of China (No. 61472021), the National Department Public Benefit Research Foundation (No. 201510209), and the Fundamental Research Funds for the Central Universities.
-%This work was partially supported by the xxx.
-
+    This work was supported by the Engineering Research Center of Ministry of Education for Advanced Computer Application Technology (ACAREC) of Beihang University. We also appreciate the advice from anonymous reviewers.
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page

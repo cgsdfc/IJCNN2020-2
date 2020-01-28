@@ -1,2 +1,0 @@
-Pang el. showed the efficiency of CNN in text matching by viewing the match as image recognition
-[Text Matching as Image Recognition]

@@ -18,7 +18,7 @@ deploy:
     description: New PDF made by Miktex
     auth_token:
       secure: AxKyd9x91aD6ZpLtvmw8iQvR1LkvduvZUcJbU2zqwbWXBBr2SI/cr4jod8SIQHmB
-    repository: cgsdfc/IJCNN2017
+    repository: cgsdfc/IJCNN2017-2
     artifact: Paper
     draft: false
     force_update: true

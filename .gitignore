@@ -42,3 +42,4 @@ info
 tmp/
 .~*
 
+.vscode/settings.json

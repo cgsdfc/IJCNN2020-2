@@ -405,41 +405,45 @@
 
 \begin{abstract}
 Evaluating generative dialogue systems with automatic metrics is a challenging task.
-It has been shown that the word-overlap metrics such as BLEU and the word-embedding metrics do not correlate well with human judgements.
-Furthermore, regardless of the correlation with human judgements, the scores of these metrics do not correlate well with others, which means fine-tuning a dialogue system on one set of metrics may yield inconsistency when testing with another set of metrics.
-This infeasibility again adds to the ineffectiveness of evaluation dialogue systems.
-To the end of utilizing metrics at its best, in this research, we offer several pragmatic suggestions on the use of automatic metrics to avoid the issue of metric inconsistency by empirically evaluating a set of automatic evaluation metrics.
+It has been shown that word-overlap metrics such as BLEU and word-embedding metrics do not correlate well with human judgements.
+In this research, we further show that the scores of these metrics do not correlate well with themselves, which means fine-tuning a dialogue system on one set of metrics may yield inconsistency when testing with another set of metrics.
+To better utilize metrics in evaluation, we offer several pragmatic suggestions on the use of automatic metrics to avoid the issue of metric inconsistency by empirically evaluating a set of automatic evaluation metrics.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Automatic Metrics, Dialogue Response Generation, Chatbot
+% Adjust order by length.
+Chatbot, Automatic Metrics, Dialogue Response Generation
 \end{IEEEkeywords}
 
 \section{Introduction}
 Recently the chat-oriented dialogue systems have seen a boom in the community.
 These systems are trained to make an appropriate response given a conversational context and can be applied to various applications.
-One of the fundamental techniques in such dialogue systems is generative model, which can learn language patterns and extract knowledge from the corpus in an unsupervised manner.
-The research community has made steady progress with the generative models and one of the most widely used techniques is Seq2Seq model \cite{Seq2Seq}.
-Though generative models have shown promising results, there exist one essential challenge.
-They incline to give meaningless responses to the questions, e.g., \textit{I don't know}, thereby making their evaluation remain an open problem \cite{HowNot}.
+One of the fundamental techniques in such dialogue systems is the generative model, which can learn language patterns and extract knowledge from the corpus in an unsupervised manner.
+The research community has made steady progress with the generative models and one of the most widely applied techniques is the Seq2Seq model \cite{Seq2Seq}.
+Although generative models have shown promising results, they incline to give meaningless responses to the questions, e.g., \textit{I don't know}.
+The vast space of possibly valid responses also makes their evaluation an open problem \cite{HowNot}.
 
-Currently most generative dialogue systems are evaluated by borrowing automatic metrics from other tasks, e.g., machine translation, such as the BLEU \cite{BLEU}, METEOR \cite{METEOR} and etc.
-However, the correlations between these borrowed metrics and human judgements were unclear and researchers generally fell back to human evaluation for better accuracy and reliability \cite{VHRED,Shang}.
-It is found that those metrics only correlated weakly with human judgements on the non-technical Twitter corpus and not at all on the technical Ubuntu Dialogue Corpus \cite{HowNot}, which calls for new automatic metrics that are more relevant to human judgements.
+Currently, most generative dialogue systems are evaluated by borrowing automatic metrics from other tasks, e.g., machine translation, such as BLEU \cite{BLEU}, METEOR \cite{METEOR}, etc.
+However, the correlations between these borrowed metrics and human judgements are unclear and researchers generally fall back to human evaluation for better accuracy and reliability \cite{VHRED,Shang}.
+It is revealed that those metrics only correlate weakly with human judgements on the non-technical Twitter Corpus and not at all on the technical Ubuntu Dialogue Corpus \cite{HowNot}, calling for new automatic metrics that are more relevant to human judgements.
 
-In this paper, we followed the previous work and further investigated the behaviors of automatic metrics without human judgements.
-We analyzed both system-level and example-level scores to find out possible correlations among different metrics.
-In particular, we drew samples from the example-level scores of different metrics and analyze the pairwise correlation of these samples.
-It is found that some pairs of samples have a high correlation, while other pairs show a much lower one.
+% 'without human evaluation' is deleted since I want to make it a future work.
+In this paper, we follow the previous work and further analyze the behaviors of automatic metrics using different models and datasets. 
+We analyze both system-level scores and example-level scores to investigate correlations between different metrics.
+The experiments show that the system-level scores generally have better pairwise correlations than that of the example-level scores.
+% TODO: correlation of system scores in table.
+To reveal possible inconsistencies of the example-level scores,
+We further analyze them by sampling the pool of examples (i.e., $(context, resposne, reference)$ tuples) and clustering the metrics using their pairwise correlations as the distance function.
+As a result, hierarchical clusters of metrics are observed and common clusters arise across different model-dataset configuration, which indicates some metrics tend to have higher pairwise correlations than others.
 
-Based on these observations, we further clustered the metrics based on the pairwise correlations of their corresponding samples.
-The results show that similar metrics tend to cluster together, indicating a high pairwise correlation within the same group.
-According to the experiment results, it is argued that the scores given by dissimilar metrics have the risk of high inconsistency, which is yet another pitfall of using automatic metrics.
+According to the experiment results, it is argued that the example-level scores given by different metrics can be potentially quite inconsistent.
+For example, one example may be scored higher than the other under BLEU or other word-overlap metrics, but may get a lower score under an embedding-based metrics.
+% TODO: change this.
 Therefore, it is strongly recommended to choose consistent metrics for the ease of comparison across different settings.
 
 The rest of the paper is organized as follows: Section II will present the related work in the literature about the evaluation metrics on dialogue systems.
-Section III will illustrated the empirical study's setup and configuration and Section IV will present and discuss the result.
-Section V will conclude the paper and point out potential future direction.
+Section III will illustrate the empirical study's setup and configurations and Section IV will present and discuss the results.
+Section V will conclude the paper and point out potential future directions.
 
 \section{Related Work}
 In dialogue response generation, to address the issue of low metric-human correlation, various semantic-based methods have been proposed.
@@ -468,7 +472,7 @@ In particular, we are curious about what can we learn when scores from different
 \section{Experiment Configurations}
 Our experiment essentially involves training multiple generative models on multiple datasets, and then measure their performances with various automatic metrics.
 As stated, our study does not involve human evaluation.
-We also do not consider retrieval models as we mainly focuse on generative models.
+We also do not consider retrieval models as we mainly focus on generative models.
 Due to the time and resource constrains, we limit our scope to three commonly used models and three datasets.
 
 % ------------------------- %

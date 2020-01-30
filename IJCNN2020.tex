@@ -548,7 +548,13 @@ Finally, the \emph{utterance decoder} takes the context vector and generates the
 3) The VHRED model \cite{VHRED} extends the HRED model with a variational inference mechanism.
 Essentially, VHRED injects into the utterance decoder random variables that are sampled from a high-dimension normal distribution, the parameters of which are conditioned on the context vector $e_d$.
 
-The model configurations for utterance encoder, context encoder and utterance decoder are listed in Tables~1-4, which are largely aligned with \cite{VHRED}.
+The model configurations for utterance encoder, context encoder and utterance decoder are listed in Tables~
+\ref{tab:ParametersOfUtteranceEncoder},
+\ref{tab:ParametersOfContextEncoder},
+\ref{tab:RNNTypeOfUtteranceDecoder}, and
+\ref{tab:HiddenUnitsOfUtteranceDecoder},
+respectively.
+Our model configurations are largely aligned with \cite{VHRED}.
 We use the Adam optimizer \cite{AdamOpt} and apply gradient clipping with a threshold of 1.
 The learning rate is set to 0.0002 on the Ubuntu Dialogue Corpus and 0.0002 on the other datasets.
 All the models are trained on a Nvidia GTX for at least one week.
@@ -559,7 +565,10 @@ We use random sampling to generate each example at the time of testing.
 % --------- Datasets -------- %
 % --------------------------- %
 \subsection{Datasets}
-In this research, we select three commonly used datasets, the statistics of which are listed in Tables~5-6.
+In this research, we select three commonly used datasets.
+The statistics of the training set and testing set are listed in Tables~
+\ref{tab:StatisticsOfTrainingSet} and
+\ref{tab:StatisticsOfTestingSet}, respectively.
 These datasets represent three common domains in the literature, namely technical support, movie subtitles and online forums.
 \input{data/dataset_stats.tex}
 
@@ -576,7 +585,7 @@ It is believed that a more specific domain can help avoid generating universal r
 
 \section{Experimental Result and Discussion}
 \subsection{System-Level Scores}
-We first measured the system-level scores for all configurations, listed in Table~7 (scores in bold are the best among the three models).
+We first measured the system-level scores for all configurations, listed in Table~\ref{tab:system_scores} (scores in bold are the best among the three models).
 For metrics that do not have an explicit system-level definition, we took the arithmetic average of their example-level scores.
 \input{data/system_level_scores.tex}
 
@@ -646,7 +655,7 @@ We also find that ADEM does not correlate well with all the other metrics since 
 
 \subsection{Qualitative Analysis}
 \input{data/example/OpenSubtitles.tex}
-Table~8 serves as an instance of the example-level inconsistency of metrics
+Table~\ref{tab:AnExampleFromOpenSubtitles} serves as an instance of the example-level inconsistency of metrics
 \footnote{The symbol $</s>$ denotes the end of a sentence.}.
 The context conveys the fact that ``you'' will be in the same class with ``her''
 and assumes that ``you'' will have plenty of time to play together with ``her''.
@@ -677,17 +686,18 @@ The inconsistency between different evaluation metrics may contribute to the low
 
 % Recommendations based on the experiments.
 Based on the experiment results, it is advised to avoid evaluating generative models with a single metric as the results may not be
-consistent when alternative metric is used. Besides, human judgements should be consulted when possible since
-the metrics are known to be inconsistent and may mislead the direction when fine-tuning the models.
+consistent with alternative metrics. Besides, human judgements should be consulted when possible since
+the metrics are known to be inconsistent and may mislead the direction of fine-tuning.
 
 % Future direction of developing better metrics.
 To develop better metrics, it is advised to consider the example tuple $(context, reference, response)$
-as a whole and pay attention to both the intrinsic properties of a response (i.e., its grammatical correctness, fluency etc.) and its relationships to the context and reference (i.e., topic relevance, engagement etc.). It is also advised to use human judgements data as supervised signals to refine evaluation metrics, as done by \cite{ADEM}.
+as a whole and pay attention to both the intrinsic properties of a response (i.e., its grammatical correctness, fluency etc.) and its relationships to the context and reference (i.e., topic relevance, engagement etc.). It is also advised to use human judgements data as supervised signals to refine evaluation metrics, as in \cite{ADEM}.
 
 % Our future work.
 It is widely acknowledged that human judgements are indispensable for the evaluation of generative models.
-In the following work, we would like to introduce human scores as a baseline and directly compute their correlations with metrics.
-Although hierarchical clusters of metrics are observed in this research, it is not clear whether this is a general phenomenon for evaluation metrics. In the further study, we would like to deepen our understanding on the mechanisms behind the scene.
+In the future, we would like to introduce human scores as a baseline and directly compute their correlations with metrics.
+Although hierarchical clusters of metrics are observed in this research, it is not clear whether this is a general phenomenon for evaluation metrics.
+In the future, we would like to deepen our understanding on the mechanisms behind the scene.
 We would also like to include more recently proposed evaluation methods to make our survey more comprehensive.
 
 \section*{Acknowledgments}

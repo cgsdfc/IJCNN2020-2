@@ -646,18 +646,24 @@ We also find that ADEM does not correlate well with all the other metrics since 
 
 \subsection{Qualitative Analysis}
 \input{data/example/OpenSubtitles.tex}
-Table~8 serves as an example of the inter-metrics inconsistency.
+Table~8 serves as an instance of the example-level inconsistency of metrics
+\footnote{The symbol $</s>$ denotes the end of a sentence.}.
+The context conveys the fact that ``you'' will be in the same class with ``her''
+and assumes that ``you'' will have plenty of time to play together with ``her''.
+The reference is a positive reply to the context.
+
 The response from HRED mentions ``her room'', which is relevant to the subject ``she'' in the context and the verb ``starts'' matches the ``start'' in the reference.
-The response from VHRED does not share any token with the context or reference, but it remarks the event mentioned by the context so it is quite a reasonable one.
+The response from VHRED does not share any word with the context or reference, but it makes a positive comment on the fact, which is most appropriate one among the three.
+The response from LSTM is not a complete sentence and its meaning is unclear.
 
-All three responses share no n-grams with either the context or the reference in terms of exact matching.
-Thus, all the word-overlap metrics yield a zero value.
-However, all the word-embedding metrics give non-zero value, making them incompatible with the word-overlap metrics.
+% Note: Three responses share n-grams with context, but not reference.
+All three responses share no n-grams with the reference so all the word-overlap metrics yield a zero value.
+However, all the word-embedding metrics give non-zero value, making them inconsistent with the word-overlap metrics.
 
-In terms of semantic relevance, the responses from both HRED and VHRED are somehow related to the topic of the dialogue, while the response from LSTM looks grammatically incomplete.
-One will mostly agree that the responses from HRED and VHRED are equally better than that from LSTM. Nonetheless, the ranks given by the word-embedding metrics do not agree with our manual inspection.
-For example, they all give higher scores to LSTM than HRED.
-
+In terms of topic relevance, the responses from HRED and VHRED are strongly related to the topic of the dialogue, while the response from LSTM is off-topic.
+However, the ranks given by the word-embedding metrics do not agree with our manual inspection.
+Greedy and Average both give highest scores to LSTM, while Extrema gives lowest score to HRED.
+The inconsistent scores cannot reflect the quality of the responses.
 
 \section{Conclusion and Future Work}
 % Summary of the experiment results.
@@ -674,10 +680,14 @@ Based on the experiment results, it is advised to avoid evaluating generative mo
 consistent when alternative metric is used. Besides, human judgements should be consulted when possible since
 the metrics are known to be inconsistent and may mislead the direction when fine-tuning the models.
 
+% Future direction of developing better metrics.
+To develop better metrics, it is advised to consider the example tuple $(context, reference, response)$
+as a whole and pay attention to both the intrinsic properties of a response (i.e., its grammatical correctness, fluency etc.) and its relationships to the context and reference (i.e., topic relevance, engagement etc.). It is also advised to use human judgements data as supervised signals to refine evaluation metrics, as done by \cite{ADEM}.
+
 % Our future work.
 It is widely acknowledged that human judgements are indispensable for the evaluation of generative models.
-In our following work, we would like to introduce human scores as a baseline and directly compute their correlations with metrics.
-We would also like to include more recently proposed evaluation methods to understand how well we can evaluate the generated dialogues nowadays.
+In the following work, we would like to introduce human scores as a baseline and directly compute their correlations with metrics.
+We would also like to include more recently proposed evaluation methods to make our survey more comprehensive.
 
 \section*{Acknowledgments}
 This work was partially supported by the State Key Laboratory of Software Development Environment of China (No. SKLSDE-2019ZX-15).

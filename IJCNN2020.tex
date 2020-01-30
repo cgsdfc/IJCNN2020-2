@@ -591,7 +591,7 @@ The system-level scores are largely consistent in terms of the best performing m
 However, the consistency among the metrics does not necessarily lead to a high correlation with human judgement, as shown in \cite{HowNot}.
 Moreover, since the system-level score is calculated by accumulating over the example-level scores,
 it is possible that the inconsistency on the example-level is hidden away.
-To reveal the possible inconsistency, we performed analyses on the example-level scores.
+To reveal the possible inconsistency, we perform analyses on the example-level scores.
 
 \subsection{Example-Level Scores}
 On the example level, a matrix $M \in R^{N \times M}$ is calculated for each model instance, where $N$ is the number of examples and $M$ is the number of metrics.
@@ -607,7 +607,7 @@ Each subfigure in Fig.~\ref{fig:corr_heatmap} was plotted from the correlation m
 The color of the cells represents the degree of correlation between the row and column labels, with red, blue, and white stand for positive, negative and zero correlation, respectively.
 One can observe red regions divided by white or blue lines from these plots, showing the signs of clustering.
 
-To better observe the agreement and disagreement among the metrics, we applied hierarchical clustering to the metrics based on their correlations and the results are shown in Fig.~\ref{fig:hierarchy}.
+To better observe the degree of correlations among different metrics, we applied hierarchical clustering to the metrics based on their correlations and the results are shown in Fig.~\ref{fig:hierarchy}.
 A hierarchical clustering algorithm starts with a forest of nodes and iteratively merges them into larger clusters until the root cluster is created.
 We used the following node-level distance $\textit{dist}(\cdot, \cdot)$ and cluster-level distance $d(\cdot, \cdot)$:
 \begin{align}
@@ -626,7 +626,7 @@ It is interesting to find that the dendrograms in Fig.~\ref{fig:hierarchy} share
 
 2) Word-Embedding: a small cluster that contains Vector-Average, Vector-Extrema, and Greedy-Matching.
 
-3) ADEM: a standalone cluster formed by ADEM.
+3) ADEM: a standalone cluster formed by the ADEM metric.
 
 4) Distinct-1: a metric that might belong to some cluster or become a standalone cluster depending on the dataset involved.
 
@@ -687,6 +687,7 @@ as a whole and pay attention to both the intrinsic properties of a response (i.e
 % Our future work.
 It is widely acknowledged that human judgements are indispensable for the evaluation of generative models.
 In the following work, we would like to introduce human scores as a baseline and directly compute their correlations with metrics.
+Although hierarchical clusters of metrics are observed in this research, it is not clear whether this is a general phenomenon for evaluation metrics. In the further study, we would like to deepen our understanding on the mechanisms behind the scene.
 We would also like to include more recently proposed evaluation methods to make our survey more comprehensive.
 
 \section*{Acknowledgments}

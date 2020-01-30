@@ -43,3 +43,5 @@ tmp/
 .~*
 
 .vscode/settings.json
+*.zip
+*.sh

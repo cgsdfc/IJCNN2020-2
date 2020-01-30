@@ -434,12 +434,13 @@ The experiments show that the system-level scores generally have better pairwise
 % TODO: correlation of system scores in table.
 To reveal possible inconsistencies of the example-level scores,
 We further analyze them by sampling the pool of examples (i.e., $(context, resposne, reference)$ tuples) and clustering the metrics using their pairwise correlations as the distance function.
-As a result, hierarchical clusters of metrics are observed and common clusters arise across different model-dataset configuration, which indicates some metrics tend to have higher pairwise correlations than others.
+As a result, hierarchical clusters of metrics are observed and common clusters arise across different model-dataset configurations,
+which indicates some metrics tend to have higher pairwise correlations than others.
 
 According to the experiment results, it is argued that the example-level scores given by different metrics can be potentially quite inconsistent.
 For example, one example may be scored higher than the other under BLEU or other word-overlap metrics, but may get a lower score under an embedding-based metrics.
 % TODO: change this.
-Therefore, it is strongly recommended to choose consistent metrics for the ease of comparison across different settings.
+Therefore, it is strongly recommended to choose consistent metrics for the ease of comparison across different configurations.
 
 The rest of the paper is organized as follows: Section II will present the related work in the literature about the evaluation metrics on dialogue systems.
 Section III will illustrate the empirical study's setup and configurations and Section IV will present and discuss the results.
@@ -466,14 +467,11 @@ An extensive study of metric-human correlation was conducted by Liu et al. \cite
 It was revealed that although these metrics could distinguish state-of-art models from baseline models, none of them correlated highly with human scores.
 Their work has left us two questions: 1) How can we improve the metric-human correlation? 2) Why do the existing metrics correlate badly with human judgements?
 Previous works that proposed enhanced metrics endeavored to answer the first question, while we try to shed some light on the second one.
-In particular, we are curious about what can we learn when scores from different metrics are put together and compared across various settings.
-
+In particular, we are curious about what can we learn when scores from different metrics are put together and compared across various configurations.
 
 \section{Experiment Configurations}
-Our experiment essentially involves training multiple generative models on multiple datasets, and then measure their performances with various automatic metrics.
-As stated, our study does not involve human evaluation.
-We also do not consider retrieval models as we mainly focus on generative models.
-Due to the time and resource constrains, we limit our scope to three commonly used models and three datasets.
+We train multiple generative models on multiple datasets, and then score the outputs of different model-dataset configurations with various automatic metrics.
+Constrained by time and resource, we limit our scope to three commonly used generative models and three datasets.
 
 % ------------------------- %
 % --------- Metrics ------- %
@@ -535,7 +533,7 @@ It is a token-level measurement of the diversity of a response.
 % --------- Models -------- %
 % ------------------------- %
 \subsection{Models}
-In our research, three representative models from \cite{VHRED} are selected, namely LSTM, HRED, and VHRED. LSTM is a simple model based on the Long Short-Term Memory \cite{LSTM}.
+In this research, three representative models from \cite{VHRED} are selected, namely LSTM, HRED, and VHRED. LSTM is a simple model based on the Long Short-Term Memory \cite{LSTM}.
 HRED extends the standard Seq2Seq framework by using a hierarchical encoder.
 VHRED is an extension to HRED that injects randomness into the decoder to achieve higher diversity.
 As such, they form a hierarchy of architectural sophistication and are ideal baselines of generative models.
@@ -550,18 +548,18 @@ Finally, the \emph{utterance decoder} takes the context vector and generates the
 3) The VHRED model \cite{VHRED} extends the HRED model with a variational inference mechanism.
 Essentially, VHRED injects into the utterance decoder random variables that are sampled from a high-dimension normal distribution, the parameters of which are conditioned on the context vector $e_d$.
 
-The configurations for different model components are shown in Tables 1-4 .
-We used Adam \cite{AdamOpt} as our optimizer and applied gradient clipping with a threshold of 1.
-The learning rate was set to 0.0002 on the Ubuntu corpus and 0.0002 on the others.
-All the models were trained on a Nvidia GTX for at least one week.
-We used random sampling when testing.
+The model configurations for utterance encoder, context encoder and utterance decoder are listed in Tables~1-4, which are largely aligned with \cite{VHRED}.
+We use the Adam optimizer \cite{AdamOpt} and apply gradient clipping with a threshold of 1.
+The learning rate is set to 0.0002 on the Ubuntu Dialogue Corpus and 0.0002 on the other datasets.
+All the models are trained on a Nvidia GTX for at least one week.
+We use random sampling to generate each example at the time of testing.
 \input{data/model_config.tex}
 
 % --------------------------- %
 % --------- Datasets -------- %
 % --------------------------- %
 \subsection{Datasets}
-In this research, we select three commonly used datasets, the statistics of which are listed in Tables 5-6.
+In this research, we select three commonly used datasets, the statistics of which are listed in Tables~5-6.
 These datasets represent three common domains in the literature, namely technical support, movie subtitles and online forums.
 \input{data/dataset_stats.tex}
 
@@ -578,17 +576,21 @@ It is believed that a more specific domain can help avoid generating universal r
 
 \section{Experimental Result and Discussion}
 \subsection{System-Level Scores}
-We first measured the system-level scores for all settings, shown in Table 7.
-The system-level score reflects the average performance of a model trained on a dataset.
+We first measured the system-level scores for all configurations, listed in Table~7 (scores in bold are the best among the three models).
 For metrics that do not have an explicit system-level definition, we took the arithmetic average of their example-level scores.
 \input{data/system_level_scores.tex}
 
 The system-level scores of different metrics look quite consistent in terms of the best performing model on a certain dataset.
-On LSDSCC, for example, the HRED model beats all the other models on all but one metrics, while on OpenSubtitles, the VHRED model wins the best of most of the metrics.
-The system-level score seems to be able to distinguish state-of-the-art models from baselines, since most of the metrics agree on which model is the best.
+For instance, on LSDSCC, the HRED model beats all the other models on all but one metrics (ROUGE-4).
+On OpenSubtitles, the VHRED model wins the best of most of the metrics.
+On Ubuntu Dialogue Corpus, it is less cleared which one is the best model since the dataset is much more noisy,
+but still half of the metrics agree that the HRED model is the best.
+The system-level scores are largely consistent in terms of the best performing model.
 
+% TODO: system correlation
 However, the consistency among the metrics does not necessarily lead to a high correlation with human judgement, as shown in \cite{HowNot}.
-Moreover, since the system-level score is calculated by accumulating over the example-level scores, it is possible that the inconsistency on the example-level is hidden away.
+Moreover, since the system-level score is calculated by accumulating over the example-level scores,
+it is possible that the inconsistency on the example-level is hidden away.
 To reveal the possible inconsistency, we performed analyses on the example-level scores.
 
 \subsection{Example-Level Scores}
@@ -596,16 +598,16 @@ On the example level, a matrix $M \in R^{N \times M}$ is calculated for each mod
 Each row $r_i$ of the matrix is the scores of all metrics for an example $e_i$, while each column $c_j$ is the values of a metric $s_j$ computed for all examples.
 All the metrics share the same set of examples within a matrix.
 Thus, the correlation of any two columns $c_i, c_j$ can be understood as to how much the corresponding metrics $s_i, s_j$ agree on their shared examples.
-We compute the pairwise correlations of the metrics and highlight the degree of correlation with heatmaps, as shown in Fig. \ref{fig:corr_heatmap}.
+We compute the pairwise correlations of the metrics and highlight the degree of correlation with heatmaps, as shown in Fig.~\ref{fig:corr_heatmap}.
 We used Pearson's r and all the results are statistically significant.
 
 \input{data/heatmap.tex}
 
-Each subfigure in Fig. \ref{fig:corr_heatmap} was plotted from the correlation matrix for a model instance.
+Each subfigure in Fig.~\ref{fig:corr_heatmap} was plotted from the correlation matrix for a model instance.
 The color of the cells represents the degree of correlation between the row and column labels, with red, blue, and white stand for positive, negative and zero correlation, respectively.
 One can observe red regions divided by white or blue lines from these plots, showing the signs of clustering.
 
-To better observe the agreement and disagreement among the metrics, we applied hierarchical clustering to the metrics based on their correlations and the results are shown in Fig. \ref{fig:hierarchy}.
+To better observe the agreement and disagreement among the metrics, we applied hierarchical clustering to the metrics based on their correlations and the results are shown in Fig.~\ref{fig:hierarchy}.
 A hierarchical clustering algorithm starts with a forest of nodes and iteratively merges them into larger clusters until the root cluster is created.
 We used the following node-level distance $\textit{dist}(\cdot, \cdot)$ and cluster-level distance $d(\cdot, \cdot)$:
 \begin{align}
@@ -615,10 +617,10 @@ We used the following node-level distance $\textit{dist}(\cdot, \cdot)$ and clus
 where $i$ and $j$ are points in cluster $u$ and $v$, respectively. $|u|$ and $|v|$ are the cardinalities of cluster $u$ and $v$, respectively\footnote{This is also known as the average method.}. Again the correlation is based on Pearson's r.
 \input{data/hierarchy.tex}
 
-From Fig. \ref{fig:hierarchy}, we observe a hierarchy of agreement among different metrics.
+From Fig.~\ref{fig:hierarchy}, we observe a hierarchy of agreement among different metrics.
 The clusters created in the earlier iterations appear closer to the leaves of the tree, which indicates higher pairwise correlations or stronger inter-metric agreement.
 As a cluster grows larger, its children become more loosely connected with greater distances.
-It is interesting to find that the dendrograms in Fig. \ref{fig:hierarchy} share some regular structure, which has an observable correspondence to the category of the metrics. Across all the settings, we generally observe these independent clusters, named after the shared category or representative element:
+It is interesting to find that the dendrograms in Fig.~\ref{fig:hierarchy} share some regular structure, which has a clear correspondence to the category of the metrics. Across all the configurations, we generally observe these independent clusters, named after the shared category or representative element:
 
 1) Word-Overlap: a large cluster that contains many subclusters formed by different word-overlap metrics, such as BLEU, ROUGE, and METEOR.
 
@@ -639,12 +641,12 @@ Besides, it is also unclear how these metrics reflect the desirable properties o
 Hence we can only conclude that similar metrics tend to have consistent results on the example-level.
 The similarity of metrics generally refers to their mechanisms, such as the way to extract overlap units or derive semantics from an utterance, or the way to combine different components.
 
-Specifically, we find that metrics based on word overlap tend to have high pairwise correlations since they all make use of the n-gram statistics somehow.
+Specifically, we find that metrics based on word overlap tend to have high pairwise correlations since they all make use of the n-gram statistics in some way.
 We also find that ADEM does not correlate well with all the other metrics since it has a much higher correlation with human judgement while other metrics do not.
 
 \subsection{Qualitative Analysis}
 \input{data/example/OpenSubtitles.tex}
-Table 8 serves as an example of the inter-metrics inconsistency.
+Table~8 serves as an example of the inter-metrics inconsistency.
 The response from HRED mentions ``her room'', which is relevant to the subject ``she'' in the context and the verb ``starts'' matches the ``start'' in the reference.
 The response from VHRED does not share any token with the context or reference, but it remarks the event mentioned by the context so it is quite a reasonable one.
 
@@ -658,18 +660,24 @@ For example, they all give higher scores to LSTM than HRED.
 
 
 \section{Conclusion and Future Work}
-In this paper, we followed the work of \cite{HowNot} and try to understand the reasons behind low metric-human correlations.
-We investigated the system-level scores and leveraged statistical analyses to reveal the inter-metrics correlation on the example level.
-Our study shows a high consistency of metrics on the system level, as shown by others \cite{HowNot,VHRED,GoogleChatbot}.
-We further show that on the example level, similar metrics tend to score the examples more consistently and the degree of correlations forms a hierarchical cluster.
+% Summary of the experiment results.
+In this paper, we follow the work of \cite{HowNot} and try to understand the reasons behind low metric-human correlations.
+We perform statistical analyses on both the system-level scores and example-level scores on three commonly used models and datasets.
+Our experiments show that while the system-level scores are relatively consistent in terms of the best model,
+the example-level scores are only consistent within the same group of metrics.
+As each metric may introduce their own bias into the evaluation process, their scores are potentially inconsistent by nature.
+However, these inconsistencies may counteract each other when being summed up so the system-level scores still look consistent.
+The inconsistency between different evaluation metrics may contribute to the low human-metric correlation.
 
-Intuitively, different metrics judge a dialogue from different angles, while human beings judge it from a quite comprehensive perspective.
-This might explain why the metrics do not correlate well with human judgements.
-Our discovery of the example-level correlation-based hierarchical clusterings of metrics is a novel contribution.
+% Recommendations based on the experiments.
+Based on the experiment results, it is advised to avoid evaluating generative models with a single metric as the results may not be
+consistent when alternative metric is used. Besides, human judgements should be consulted when possible since
+the metrics are known to be inconsistent and may mislead the direction when fine-tuning the models.
 
-Based on the observations, it is recommended to avoid using a set of metrics that have low pairwise correlations since that will make the example-level scores divergent and hard to explain.
-We also urge against the use of metrics that are known to have poor correlations with human judgements.
-In the future, we would like to look deeper into the mechanisms behind the metric-human correlations.
+% Our future work.
+It is widely acknowledged that human judgements are indispensable for the evaluation of generative models.
+In our following work, we would like to introduce human scores as a baseline and directly compute their correlations with metrics.
+We would also like to include more recently proposed evaluation methods to understand how well we can evaluate the generated dialogues nowadays.
 
 \section*{Acknowledgments}
 This work was partially supported by the State Key Laboratory of Software Development Environment of China (No. SKLSDE-2019ZX-15).

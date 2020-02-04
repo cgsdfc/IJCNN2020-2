@@ -1,0 +1,55 @@
+1.
+we analyze both system-level scores
+->
+We analyze both system-level scores
+
+2.
+we are curious about what can we learn
+->
+we are curious about what we can learn
+
+3.
+Here are a list of popular metrics
+->
+Here is a list of popular metrics
+
+4.
+nueral network.
+->
+neural network
+
+5.
+it is less cleared
+->
+it is less clear
+
+6.
+much more noisy
+->
+much noisier
+
+7.
+Each row $r_i$ of the matrix is the scores of all metrics
+->
+Each row $r_i$ of the matrix contains the scores of all metrics
+
+8.
+We used Pearson's r
+->
+We use Pearson's r
+# 与上下文时态一致
+
+9.
+more loosely
+->
+looselier
+
+10.
+which is most appropriate one among the three.
+->
+which is the most appropriate one among the three.
+
+11.
+Greedy and Average both give highest scores to LSTM, while Extrema gives lowest score to HRED.
+->
+Greedy and Average both give the highest score to LSTM, while Extrema gives the lowest score to HRED.
